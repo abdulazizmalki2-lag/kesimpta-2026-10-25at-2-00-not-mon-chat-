@@ -235,14 +235,14 @@
 
   /* dosing timeline */
   .timeline{
-    position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:18px;
+    position:relative; display:grid; grid-template-columns:repeat(5,1fr); gap:0; margin-top:18px;
   }
   .timeline .line{
-    position:absolute; top:26px; right:12.5%; left:12.5%; height:3px;
+    position:absolute; top:26px; right:10%; left:10%; height:3px;
     background:var(--line); z-index:0;
   }
   .timeline .line-fill{
-    position:absolute; top:26px; right:12.5%; height:3px; width:0%;
+    position:absolute; top:26px; right:10%; height:3px; width:0%;
     background:var(--teal-bright); z-index:1; transition:width 1.4s cubic-bezier(.3,.8,.3,1);
   }
   .t-step{ position:relative; z-index:2; text-align:center; padding:0 8px;}
@@ -258,6 +258,9 @@
   .t-dose{ font-family:var(--font-display); font-weight:800; color:var(--teal-deep); font-size:1.05rem;}
   .t-step:last-child .t-dose{ color:var(--amber); }
   .t-note{ font-size:.78rem; color:var(--ink-soft); margin-top:4px;}
+  .t-step.rest .t-node{ background:var(--amber-pale); border:3px dashed var(--amber); color:var(--amber); }
+  .t-step.rest .t-dose{ color:var(--amber); }
+  .timeline-note{ margin-top:30px; background:var(--amber-pale); border:1px solid rgba(199,122,38,.35); border-radius:var(--radius-md); padding:14px 18px; color:var(--ink); font-size:1rem; line-height:1.9; text-align:center; }
 
   /* injection sites */
   .sites-grid{
@@ -558,6 +561,7 @@
     .test-grid{ grid-template-columns:1fr 1fr; }
     .effects-grid{ grid-template-columns:1fr; }
     .timeline{ grid-template-columns:1fr 1fr; row-gap:36px; }
+    .timeline .t-step:last-child{ grid-column:1 / -1; }
     .timeline .line, .timeline .line-fill{ display:none; }
     section{ padding:56px 0; }
   }
@@ -626,10 +630,12 @@
     font-family:var(--font-body); font-size:1rem; background:#fff; color:var(--ink);
   }
   @media (max-width:640px){ .trk-between{ align-items:flex-start; } }
-/* ---------- educational AI helper ---------- */
-.ai-launch{position:fixed;left:22px;bottom:22px;z-index:250;border:0;border-radius:999px;background:var(--teal-deep);color:#fff;padding:13px 20px;font:700 15px var(--font-body);box-shadow:0 8px 24px #0b4f5544;cursor:pointer}
-.ai-panel{position:fixed;left:20px;bottom:82px;z-index:251;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100dvh - 110px));display:none;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 48px #12262b33;overflow:hidden}
-.ai-panel.open{display:flex}.ai-head{background:var(--teal-deep);color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}.ai-head h2{font-size:1.1rem;color:white}.ai-close{border:0;background:transparent;color:white;font-size:24px;cursor:pointer}.ai-notice{font-size:12px;line-height:1.65;padding:10px 14px;background:var(--amber-pale);color:var(--ink)}.ai-messages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}.ai-msg{max-width:92%;padding:10px 12px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.75}.ai-msg.user{align-self:flex-start;background:var(--teal-pale)}.ai-msg.assistant{align-self:flex-end;background:var(--paper)}.ai-source{display:block;margin-top:7px;font-size:11px;color:var(--ink-soft)}.ai-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}.ai-form textarea{flex:1;resize:none;min-height:44px;max-height:110px;border:1px solid var(--line);border-radius:12px;padding:10px;font:14px var(--font-body)}.ai-form button{border:0;border-radius:12px;background:var(--teal-deep);color:#fff;padding:0 15px;font:700 14px var(--font-body);cursor:pointer}.ai-form button:disabled{opacity:.5;cursor:wait}</style>
+  /* message bands */
+  .msg-band{ background:var(--teal-deep); color:#EAF6F4; text-align:center; padding:11px 16px; font-family:var(--font-display); font-weight:500; font-size:1.02rem; letter-spacing:.2px; }
+  .msg-band span{ display:inline-flex; align-items:center; gap:10px; }
+  .msg-band span::before, .msg-band span::after{ content:""; width:6px; height:6px; border-radius:50%; background:var(--teal-bright); flex:none; }
+  @media (max-width:640px){ .msg-band{ font-size:.95rem; padding:10px 14px; } }
+</style>
 </head>
 <body>
 
@@ -653,6 +659,8 @@
     </nav>
   </div>
 </header>
+
+<div class="msg-band"><span>خطوة بسيطة لصحة تدوم</span></div>
 
 <section class="hero">
   <div class="wrap hero-inner">
@@ -715,13 +723,20 @@
         <div class="t-week">الأسبوع 2</div>
         <div class="t-dose">20 mg</div>
       </div>
+      <div class="t-step rest">
+        <div class="t-node">3</div>
+        <div class="t-week">الأسبوع 3</div>
+        <div class="t-dose">راحة</div>
+        <div class="t-note">بدون جرعة</div>
+      </div>
       <div class="t-step">
         <div class="t-node"><i class="ico fa-infinity"><svg viewBox="0 0 24 24"><path d="M7 9c-2 0-3.5 1.6-3.5 3.5S5 16 7 16c2.5 0 3.5-7 7-7 2 0 3.5 1.6 3.5 3.5S16.5 16 14.5 16c-2.5 0-3.5-7-7-7Z"/></svg></i></div>
         <div class="t-week">الأسبوع 4 وما بعده</div>
         <div class="t-dose">20 mg</div>
-        <div class="t-note">مرة واحدة شهرياً</div>
+        <div class="t-note">مرة واحدة كل شهر في نفس الموعد</div>
       </div>
     </div>
+    <p class="timeline-note">بعد الجرعة الثالثة (الأسبوع 2) يكون الأسبوع 3 راحة بدون أي جرعة، ثم تأخذ الجرعة مرة واحدة كل شهر في نفس الموعد ابتداءً من الأسبوع 4.</p>
   </div>
 </section>
 
@@ -1165,6 +1180,8 @@
   </div>
 </section>
 
+<div class="msg-band" style="border-bottom:1px solid rgba(255,255,255,.18);"><span>التزامك بعلاجك اليوم يصنع فرقاً لسنوات قادمة</span></div>
+
 <footer>
   <div class="wrap">
     <div class="src">
@@ -1206,7 +1223,7 @@
   const timeObserver = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
-        fill.style.width = '75%';
+        fill.style.width = '80%';
         timeObserver.disconnect();
       }
     });
@@ -1507,41 +1524,5 @@
   }
 </script>
 
-<div class="ai-panel" id="aiPanel" role="dialog" aria-label="مساعد التثقيف عن كيسيمبتا" aria-modal="false">
-  <div class="ai-head"><h2>مساعد كيسيمبتا التثقيفي</h2><button type="button" class="ai-close" id="aiClose" aria-label="إغلاق">×</button></div>
-  <div class="ai-notice">للتثقيف فقط. لا تكتب اسمك أو رقم هويتك أو هاتفك أو تفاصيل تكشف هويتك. لا يقدّم المساعد تشخيصًا أو يغيّر العلاج؛ للحالات الطارئة تواصل مع الطوارئ.</div>
-  <div class="ai-messages" id="aiMessages" aria-live="polite"><div class="ai-msg assistant">أهلًا بك. اسأل عن المعلومات الموجودة في المصادر المعتمدة.</div></div>
-  <form class="ai-form" id="aiForm"><textarea id="aiQuestion" maxlength="1200" placeholder="اكتب سؤالك التثقيفي…" required aria-label="اكتب سؤالك"></textarea><button id="aiSend" type="submit">إرسال</button></form>
-</div>
-<button class="ai-launch" type="button" id="aiLaunch">اسأل المساعد</button>
-<script>
-(() => {
-  const WORKER_URL = 'https://kesimpta-patient-helper.abdulazizmalki2.workers.dev/chat';
-  const panel = document.getElementById('aiPanel');
-  const messages = document.getElementById('aiMessages');
-  const form = document.getElementById('aiForm');
-  const question = document.getElementById('aiQuestion');
-  const send = document.getElementById('aiSend');
-  const addMessage = (text, role, sources = []) => {
-    const bubble = document.createElement('div'); bubble.className = 'ai-msg ' + role;
-    bubble.textContent = text;
-    if (sources.length) { const source = document.createElement('small'); source.className = 'ai-source'; source.textContent = 'المصدر: ' + sources.join('، '); bubble.appendChild(source); }
-    messages.appendChild(bubble); messages.scrollTop = messages.scrollHeight;
-  };
-  document.getElementById('aiLaunch').addEventListener('click', () => { panel.classList.add('open'); question.focus(); });
-  document.getElementById('aiClose').addEventListener('click', () => panel.classList.remove('open'));
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const text = question.value.trim(); if (!text) return;
-    addMessage(text, 'user'); question.value = ''; send.disabled = true; send.textContent = '…';
-    try {
-      const response = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: text }) });
-      const data = await response.json();
-      if (!response.ok || !data.answer) throw new Error('request_failed');
-      addMessage(data.answer, 'assistant', data.sources || []);
-    } catch (_) { addMessage('تعذر الاتصال بالمساعد الآن. حاول لاحقًا أو اسأل فريقك الطبي.', 'assistant'); }
-    finally { send.disabled = false; send.textContent = 'إرسال'; question.focus(); }
-  });
-})();
-</script></body>
+</body>
 </html>
